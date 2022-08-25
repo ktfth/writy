@@ -2,6 +2,7 @@ import App from './App.svelte';
 
 interface IProps {
 	value: string;
+	latestFilePath: string;
 }
 
 interface IApp {
@@ -12,7 +13,8 @@ interface IApp {
 const appConfig: IApp = {
 	target: document.body,
 	props: {
-		value: ''
+		value: '',
+		latestFilePath: '',
 	}
 };
 

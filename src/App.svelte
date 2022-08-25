@@ -3,24 +3,29 @@
 	import { javascript } from '@codemirror/lang-javascript';
 	import { oneDark } from '@codemirror/theme-one-dark';
 
-	import { emit } from '@tauri-apps/api/event';
+	import { appWindow } from '@tauri-apps/api/window';
 	import { open, save } from '@tauri-apps/api/dialog';
 	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
 	export let value: string;
+	export let latestFilePath: string;
 
 	async function handleShortcut(event) {
 		let keyCode = event.keyCode;
 		if (event.ctrlKey) {
 			if (keyCode === 83) {
 				event.preventDefault();
-				const filePath = await save({
-					filters: [{
-						name: 'JavaScript',
-						extensions: ['js', 'jsx', 'ts', 'tsx'],
-					}],
-				});
+				let filePath = latestFilePath;
+				if (!latestFilePath) {
+					filePath = await save({
+						filters: [{
+							name: 'JavaScript',
+							extensions: ['js', 'jsx', 'ts', 'tsx'],
+						}],
+					});
+				}
 				if (!Array.isArray(filePath)) {
+					latestFilePath = filePath;
 					await writeTextFile(filePath, value);
 				}
 			}
@@ -34,6 +39,7 @@
 					}]
 				});
 				if (!Array.isArray(selected)) {
+					latestFilePath = selected;
 					value = await readTextFile(selected, { dir: BaseDirectory.App });
 				}
 			}
@@ -43,8 +49,21 @@
 	document.addEventListener('keydown', handleShortcut);
 
 	function handleValueChange() {
-		emit('value-change', value);
+		appWindow.emit('value-change', value);
 	}
+
+	appWindow.listen('open-file-path', async (filePath) => {
+		value = await readTextFile(filePath.payload as string, { dir: BaseDirectory.App });
+	});
+
+	appWindow.listen('save-file-path', async (filePath) => {
+		latestFilePath = filePath.payload as string;
+		await writeTextFile(filePath.payload as string, value);
+	});
+
+	appWindow.listen('save-as-file-path', async (filePath) => {
+		await writeTextFile(filePath.payload as string, value);
+	});
 </script>
 
 <!-- <svelte:window on:keypress={handleShortcut} /> -->
