@@ -3,19 +3,54 @@
 	import { javascript } from '@codemirror/lang-javascript';
 	import { oneDark } from '@codemirror/theme-one-dark';
 
-	export let content: string;
+	import { emit } from '@tauri-apps/api/event';
+	import { open, save } from '@tauri-apps/api/dialog';
+	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
-	function handleShortcut(event) {
-		let key = event.key;
+	export let value: string;
+
+	async function handleShortcut(event) {
 		let keyCode = event.keyCode;
-		console.log(key, keyCode);
+		if (event.ctrlKey) {
+			if (keyCode === 83) {
+				event.preventDefault();
+				const filePath = await save({
+					filters: [{
+						name: 'JavaScript',
+						extensions: ['js', 'jsx', 'ts', 'tsx'],
+					}],
+				});
+				if (!Array.isArray(filePath)) {
+					await writeTextFile(filePath, value);
+				}
+			}
+			if (keyCode === 79) {
+				event.preventDefault();
+				const selected = await open({
+					multiple: false,
+					filters: [{
+						name: 'JavaScript',
+						extensions: ['js', 'jsx', 'ts', 'tsx'],
+					}]
+				});
+				if (!Array.isArray(selected)) {
+					value = await readTextFile(selected, { dir: BaseDirectory.App });
+				}
+			}
+		}
+	}
+
+	document.addEventListener('keydown', handleShortcut);
+
+	function handleValueChange() {
+		emit('value-change', value);
 	}
 </script>
 
-<svelte:window on:keypress={handleShortcut} />
+<!-- <svelte:window on:keypress={handleShortcut} /> -->
 
 <main>
-	<CodeMirror bind:content lang={javascript()} theme={oneDark}></CodeMirror>
+	<CodeMirror bind:value lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror>
 </main>
 
 <style>

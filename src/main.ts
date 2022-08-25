@@ -1,10 +1,21 @@
 import App from './App.svelte';
 
-const app = new App({
+interface IProps {
+	value: string;
+}
+
+interface IApp {
+	target: HTMLElement;
+	props: IProps;
+}
+
+const appConfig: IApp = {
 	target: document.body,
 	props: {
-		content: ''
+		value: ''
 	}
-});
+};
+
+const app = new App(appConfig);
 
 export default app;
