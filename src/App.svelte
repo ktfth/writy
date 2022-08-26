@@ -13,7 +13,7 @@
 	async function handleShortcut(event) {
 		let keyCode = event.keyCode;
 		if (event.ctrlKey) {
-			if (keyCode === 83) {
+			if (!event.shiftKey && keyCode === 83) {
 				event.preventDefault();
 				let filePath = latestFilePath;
 				if (!latestFilePath) {
@@ -24,6 +24,19 @@
 						}],
 					});
 				}
+				if (!Array.isArray(filePath)) {
+					latestFilePath = filePath;
+					await writeTextFile(filePath, value);
+				}
+			}
+			if (event.shiftKey && keyCode === 83) {
+				event.preventDefault();
+				const filePath = await save({
+					filters: [{
+						name: 'JavaScript',
+						extensions: ['js', 'jsx', 'ts', 'tsx'],
+					}],
+				});
 				if (!Array.isArray(filePath)) {
 					latestFilePath = filePath;
 					await writeTextFile(filePath, value);
