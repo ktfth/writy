@@ -1,8 +1,16 @@
 import App from './App.svelte';
 
+interface TabFile {
+    path: string;
+    content: string;
+    index: number;
+}
+
 interface IProps {
 	value: string;
 	latestFilePath: string;
+	tabs: Array<TabFile>;
+	tabIndex: number;
 }
 
 interface IApp {
@@ -15,6 +23,12 @@ const appConfig: IApp = {
 	props: {
 		value: '',
 		latestFilePath: '',
+		tabs: [{
+			path: '',
+			content: '',
+			index: 0,
+		}],
+		tabIndex: 0,
 	}
 };
 
