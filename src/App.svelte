@@ -6,11 +6,7 @@
 	import { open, save } from '@tauri-apps/api/dialog';
 	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
-	interface TabFile {
-		path: string;
-		content: string;
-		index: number;
-	}
+	import type { TabFile } from './tab-file';
 
 	export let value: string;
 	export let latestFilePath: string;
@@ -38,6 +34,9 @@
 					await writeTextFile(filePath, value);
 					tabs[tabIndex].path = filePath;
 					tabs[tabIndex].content = value;
+					tabs[tabIndex].saved = true;
+					tabs[tabIndex].initialContent = value;
+					tabs = tabs;
 				}
 			}
 			// save as
@@ -54,6 +53,9 @@
 					await writeTextFile(filePath, value);
 					tabs[tabIndex].path = filePath;
 					tabs[tabIndex].content = value;
+					tabs[tabIndex].saved = true;
+					tabs[tabIndex].initialContent = value;
+					tabs = tabs;
 				}
 			}
 			// open file
@@ -71,6 +73,9 @@
 					value = await readTextFile(selected, { dir: BaseDirectory.App });
 					tabs[tabIndex].path = latestFilePath;
 					tabs[tabIndex].content = value;
+					tabs[tabIndex].initialContent = value;
+					tabs[tabIndex].saved = true;
+					tabs = tabs;
 				}
 			}
 			// new file
@@ -81,6 +86,8 @@
 					path: '',
 					content: '',
 					index: tabIndex,
+					saved: false,
+					initialContent: '',
 				});
 				value = '';
 				latestFilePath = '';
@@ -93,8 +100,8 @@
 					tabIndex = tabIndex - 1;
 					tabs.pop();
 					if (tabIndex > -1) {
-						value = tabs[tabs.length - 1].content;
-						latestFilePath = tabs[tabs.length - 1].path;
+						value = tabs[tabs.length - 1]?.content;
+						latestFilePath = tabs[tabs.length - 1]?.path;
 					} 
 					tabs = tabs;
 				}
@@ -105,7 +112,9 @@
 	document.addEventListener('keydown', handleShortcut);
 
 	function handleValueChange() {
+		tabs[tabIndex].saved = tabs[tabIndex].initialContent === value;
 		tabs[tabIndex].content = value;
+		tabs = tabs;
 	}
 
 	function handleSelectTab(event, index) {
@@ -120,12 +129,17 @@
 <main>
 	<div class="main-tabs">
 		{#each tabs as tab (tab.index)}
-			<a href="#{tab}" class="tab" on:click={(event) => handleSelectTab(event, tab.index)}>{tab.path.split('\\')[tab.path.split('\\').length - 1] || 'Untitled *'}</a>
+			<a 
+				href="#{tab.index}" 
+				class="tab" 
+				on:click={(event) => handleSelectTab(event, tab.index)}>
+				{tab.path.split('\\')[tab.path.split('\\').length - 1] ? tab.path.split('\\')[tab.path.split('\\').length - 1] + (!tab.saved ? ' *' : ''): 'Untitled *'}
+			</a>
 		{/each}
 	</div>
 
 	{#if tabs.length}
-		<CodeMirror bind:value lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror>
+		<CodeMirror bind:value={value} lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror>
 	{/if}
 </main>
 

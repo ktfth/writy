@@ -1,10 +1,6 @@
 import App from './App.svelte';
 
-interface TabFile {
-    path: string;
-    content: string;
-    index: number;
-}
+import type { TabFile } from './tab-file';
 
 interface IProps {
 	value: string;
@@ -27,6 +23,8 @@ const appConfig: IApp = {
 			path: '',
 			content: '',
 			index: 0,
+			saved: false,
+			initialContent: '',
 		}],
 		tabIndex: 0,
 	}
