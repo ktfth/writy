@@ -30,6 +30,7 @@
     "@codemirror/lang-javascript": "^6.0.2",
     "@codemirror/theme-one-dark": "^6.0.0",
     "@tauri-apps/api": "^1.0.2",
+    "codemirror": "^6.0.1",
     "sirv-cli": "^2.0.0",
     "svelte-codemirror-editor": "^1.0.0",
     "svelte-terminal": "github:candywater/svelte-terminal"
