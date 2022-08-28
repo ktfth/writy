@@ -22,7 +22,8 @@
   let max_style = ""
   let font_style = ""
 
-  let console_info = DEFAULT_CONSOLE_INFO
+//   let console_info = DEFAULT_CONSOLE_INFO
+  let console_info = ""
   let input_value = ""
 
   onLoad()
@@ -40,10 +41,10 @@
     closeWin()
   }
 
-  function onKeyDown(e){
+  async function onKeyDown(e){
     if(e.key === "Enter"){
-      console_info += prefix_symbol + input_value // include enter(\n)
-      console_info += commands(input_value, closeWin) + "\n"
+      console_info += prefix_symbol + " " + input_value // include enter(\n)
+      console_info += await commands(input_value, closeWin) + "\n"
       input_value = ""
     }
   }
@@ -97,9 +98,9 @@
   .terminal{
     position: absolute;
     bottom: 0;
-    background-color: rgba(156, 163, 175, 0.7);
+    background-color: #2c313a;
     width: 100%;
-    height: 15em;
+    height: 8em;
     text-align: left;
     /* font-family: consolas,monospace,Monaco,Menlo,"Space Mono"; */
     font-family: consolas, Monaco;
@@ -107,6 +108,7 @@
     line-height: 1.25rem;
     font-size: 0.85rem;
     overflow: hidden;
+    border-top: 1px solid #1e2228;
   }
   /* .header{
     background: #e8e8e8;
@@ -141,16 +143,16 @@
     background: #5bcc8b;
   } */
   .window{
-    overflow-y: scroll;
+    overflow-y: hidden;
     padding: 0.5rem;
-    background-color: rgba(8, 8, 8, 0.5);
+    background-color: #2c313a;
     height: 100%;
     color: #e8e8e8;
   }
-  .window pre{
+  /* .window pre{
     font-family: inherit;
     margin : 0px;
-  }
+  } */
 
   /*--primary-color: #1a95e0;
   //https://terminalcss.xyz/dark/#*/
@@ -171,10 +173,10 @@
     font-size: inherit;
     line-height: inherit;
     margin: 0;
-    padding: 0;
+    padding: 0 0 0 0.5em;
   }
   .terminal-prompt::before {
     font-family: inherit;
-    content: "$";
+    content: "$ ";
   }
 </style>
