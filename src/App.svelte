@@ -50,7 +50,7 @@
 	}
 
 	async function createFile() {
-		tabIndex = tabs[tabs.length - 1].index + 1 || 0;
+		tabIndex += 1;
 		tabs.push({
 			path: '',
 			content: '',
