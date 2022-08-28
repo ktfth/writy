@@ -50,7 +50,7 @@
 	}
 
 	async function createFile() {
-		tabIndex = tabIndex + 1;
+		tabIndex = tabs[tabs.length - 1].index + 1;
 		tabs.push({
 			path: '',
 			content: '',
@@ -141,10 +141,23 @@
 				event.preventDefault();
 				await saveFile();
 			}
-			// save as
-			if (event.shiftKey && keyCode === 83) {
+			// save as and alternate back
+			if (event.shiftKey) {
 				event.preventDefault();
-				await saveAsFile();
+				if (keyCode === 83) {
+					await saveAsFile();
+				} else if (keyCode === 9) {
+					event.preventDefault();
+					console.log('shift + tab', tabs[tabIndex - 1]);
+					if (tabs[tabIndex - 1] !== undefined) {
+						tabIndex = tabs[tabIndex - 1].index;
+						latestFilePath = tabs[tabIndex].path;
+						value = tabs[tabIndex].content;
+						tabs = tabs;
+					} else if (tabs[tabIndex - 1] === undefined) {
+						tabIndex = tabs.length - 1;
+					}
+				}
 			}
 			// open file
 			if (keyCode === 79) {
@@ -167,20 +180,17 @@
 				showTerminal = !showTerminal;
 			}
 			// start change focus
-			if (keyCode === 9 && tabs[tabIndex + 1] !== undefined) {
+			if (!event.shiftKey && keyCode === 9) {
+				console.log('tab', tabs[tabIndex + 1]);
 				event.preventDefault();
-				tabIndex += 1;
-				latestFilePath = tabs[tabIndex].path;
-				value = tabs[tabIndex].content;
-				tabs = tabs;
-			}
-			if (event.shiftKey) {
-				if (keyCode === 9 && tabs[tabIndex - 1] !== undefined) {
-					event.preventDefault();
-					tabIndex -= 1;
+				if (tabs[tabIndex + 1] !== undefined) {
+					console.log('exists');
+					tabIndex = tabs[tabIndex + 1].index;
 					latestFilePath = tabs[tabIndex].path;
 					value = tabs[tabIndex].content;
 					tabs = tabs;
+				} else if (tabs[tabIndex + 1] === undefined) {
+					tabIndex = 0;
 				}
 			}
 			// end change focus
