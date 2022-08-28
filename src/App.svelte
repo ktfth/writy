@@ -1,12 +1,12 @@
 <script lang="ts">
 	import CodeMirror from 'svelte-codemirror-editor';
 	import { javascript } from '@codemirror/lang-javascript';
-	import { oneDark } from '@codemirror/theme-one-dark';
+	// import { oneDark } from '@codemirror/theme-one-dark';
 
 	import { open, save } from '@tauri-apps/api/dialog';
 	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
-	import Terminal from './Terminal.svelte';
+	// import Terminal from './Terminal.svelte';
 
 	import type { TabFile } from './tab-file';
 
@@ -152,11 +152,11 @@
 		<CodeMirror bind:value={value} lang={javascript()} on:change={handleValueChange}></CodeMirror>
 	{/if}
 
-	{#if showTerminal}
+	<!-- {#if showTerminal}
 		<div class="wrapper-terminal">
 			<Terminal></Terminal>
 		</div>
-	{/if}
+	{/if} -->
 </main>
 
 <style>
