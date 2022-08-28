@@ -97,8 +97,7 @@
 			if (keyCode === 87) {
 				event.preventDefault();
 				if (tabIndex >= 0) {
-					tabIndex = tabIndex - 1;
-					tabs.pop();
+					tabs.splice(tabIndex, 1);
 					if (tabIndex > -1) {
 						value = tabs[tabs.length - 1]?.content;
 						latestFilePath = tabs[tabs.length - 1]?.path;
@@ -131,7 +130,7 @@
 		{#each tabs as tab (tab.index)}
 			<a 
 				href="#{tab.index}" 
-				class="tab" 
+				class="tab {tab.index === tabIndex ? 'selected' : ''}" 
 				on:click={(event) => handleSelectTab(event, tab.index)}>
 				{tab.path.split('\\')[tab.path.split('\\').length - 1] ? tab.path.split('\\')[tab.path.split('\\').length - 1] + (!tab.saved ? ' *' : ''): 'Untitled *'}
 			</a>
@@ -156,6 +155,8 @@
 
 	.main-tabs {
 		padding: 0.5em;
+		overflow: hidden;
+		height: 18px;
 	}
 
 	.main-tabs a {
@@ -163,6 +164,10 @@
 		font-size: 12px;
 		border-right: 1px solid lightgray;
 		padding: 0 0.5em;
+	}
+
+	.selected {
+		text-decoration: underline;
 	}
 
 	.main-tabs a:last-child {
