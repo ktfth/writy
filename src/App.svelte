@@ -148,7 +148,8 @@
 	</div>
 
 	{#if tabs.length}
-		<CodeMirror bind:value={value} lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror>
+		<!-- <CodeMirror bind:value={value} lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror> -->
+		<CodeMirror bind:value={value} lang={javascript()} on:change={handleValueChange}></CodeMirror>
 	{/if}
 
 	{#if showTerminal}
@@ -160,14 +161,14 @@
 
 <style>
 	:global(body) {
-		background-color: #2c313a !important;
+		/* background-color: #2c313a !important; */
 		margin: 0;
 		padding: 0 !important;
 	}
 
-	main {
+	/* main {
 		background-color: #2c313a !important;
-	}
+	} */
 
 	.main-tabs {
 		padding: 0.5em;
@@ -176,9 +177,11 @@
 	}
 
 	.main-tabs a {
-		color: lightgray;
+		/* color: lightgray; */
+		color: darkslategray;
 		font-size: 12px;
-		border-right: 1px solid lightgray;
+		/* border-right: 1px solid lightgray; */
+		border-right: 1px solid darkslategray;
 		padding: 0 0.5em;
 	}
 
