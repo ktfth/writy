@@ -6,6 +6,8 @@
 	import { open, save } from '@tauri-apps/api/dialog';
 	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
+	import Terminal from 'svelte-terminal';
+
 	import type { TabFile } from './tab-file';
 
 	export let value: string;
@@ -13,6 +15,8 @@
 
 	export let tabs: Array<TabFile>;
 	export let tabIndex: number;
+
+	let showTerminal = false;
 
 	async function handleShortcut(event) {
 		let keyCode = event.keyCode;
@@ -106,6 +110,11 @@
 					tabs = tabs;
 				}
 			}
+			// open terminal
+			if (keyCode === 192) {
+				event.preventDefault();
+				showTerminal = !showTerminal;
+			}
 		}
 	}
 
@@ -141,6 +150,12 @@
 	{#if tabs.length}
 		<CodeMirror bind:value={value} lang={javascript()} theme={oneDark} on:change={handleValueChange}></CodeMirror>
 	{/if}
+
+	{#if showTerminal}
+		<div class="wrapper-terminal">
+			<Terminal></Terminal>
+		</div>
+	{/if}
 </main>
 
 <style>
@@ -173,6 +188,12 @@
 
 	.main-tabs a:last-child {
 		border-right: none;
+	}
+
+	.wrapper-terminal {
+		margin-top: 1em;
+		margin-left: 1em;
+		margin-right: 1em;
 	}
 
 	@media (min-width: 640px) {
