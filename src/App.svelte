@@ -6,7 +6,7 @@
 	import { open, save } from '@tauri-apps/api/dialog';
 	import { readTextFile, writeTextFile, BaseDirectory } from '@tauri-apps/api/fs';
 
-	import Terminal from 'svelte-terminal';
+	import Terminal from './Terminal.svelte';
 
 	import type { TabFile } from './tab-file';
 
@@ -193,11 +193,11 @@
 		border-right: none;
 	}
 
-	.wrapper-terminal {
+	/* .wrapper-terminal {
 		margin-top: 1em;
 		margin-left: 1em;
 		margin-right: 1em;
-	}
+	} */
 
 	@media (min-width: 640px) {
 		main {
