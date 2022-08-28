@@ -98,6 +98,7 @@
 				event.preventDefault();
 				if (tabIndex >= 0) {
 					tabs.splice(tabIndex, 1);
+					tabIndex -= 1;
 					if (tabIndex > -1) {
 						value = tabs[tabs.length - 1]?.content;
 						latestFilePath = tabs[tabs.length - 1]?.path;
